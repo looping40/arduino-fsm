@@ -24,12 +24,12 @@
 #endif
 
 
-struct State
-{
-  State(void (*on_enter)(), void (*on_state)(), void (*on_exit)());
-  void (*on_enter)();
-  void (*on_state)();
-  void (*on_exit)();
+class State{
+public:
+  State();
+  virtual void on_enter(){};
+  virtual void on_state(){};
+  virtual void on_exit(){};
 };
 
 
@@ -46,6 +46,7 @@ public:
                             unsigned long interval, void (*on_transition)());
 
   void check_timed_transitions();
+  State* getCurrentState() {return m_current_state;};
 
   void trigger(int event);
   void run_machine();
@@ -76,7 +77,7 @@ private:
   Transition* m_transitions;
   int m_num_transitions;
 
-  TimedTransition* m_timed_transitions;
+  TimedTransition* m_timed_transitions=NULL;
   int m_num_timed_transitions;
   bool m_initialized;
 };
