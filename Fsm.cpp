@@ -16,11 +16,7 @@
 #include "Fsm.h"
 
 
-State::State(void (*on_enter)(), void (*on_state)(), void (*on_exit)())
-: on_enter(on_enter),
-  on_state(on_state),
-  on_exit(on_exit)
-{
+State::State(){
 }
 
 
@@ -137,12 +133,10 @@ void Fsm::run_machine()
   if (!m_initialized)
   {
     m_initialized = true;
-    if (m_current_state->on_enter != NULL)
-      m_current_state->on_enter();
+    m_current_state->on_enter();
   }
   
-  if (m_current_state->on_state != NULL)
-    m_current_state->on_state();
+  m_current_state->on_state();
     
   Fsm::check_timed_transitions();
 }
@@ -151,14 +145,12 @@ void Fsm::make_transition(Transition* transition)
 {
  
   // Execute the handlers in the correct order.
-  if (transition->state_from->on_exit != NULL)
-    transition->state_from->on_exit();
+  transition->state_from->on_exit();
 
   if (transition->on_transition != NULL)
     transition->on_transition();
 
-  if (transition->state_to->on_enter != NULL)
-    transition->state_to->on_enter();
+  transition->state_to->on_enter();
   
   m_current_state = transition->state_to;
 
